@@ -1,0 +1,7 @@
+{
+  "name": "Bakhshu Taekwondo & Fitness Club",
+  "description": "Award-winning Taekwondo academy in Islamabad and Rawalpindi. Creating champions in the ring and in life through discipline, fitness, and confidence.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}

@@ -48,7 +48,7 @@ const SpecialAlert: React.FC<SpecialAlertProps> = ({ onBook }) => {
             <div className="flex flex-col sm:flex-row gap-6 justify-center pt-8">
               <button 
                 onClick={onBook}
-                className="red-button px-16 py-8 rounded-none font-black text-sm uppercase tracking-widest flex items-center justify-center space-x-4 shadow-[0_20px_60px_rgba(255,60,60,0.25)] active:scale-95 transition-all"
+                className="red-button px-12 py-6 rounded-none font-black text-sm uppercase tracking-widest flex items-center justify-center space-x-4 shadow-[0_20px_60px_rgba(255,60,60,0.25)] active:scale-95 transition-all"
               >
                 <Zap size={20} className="fill-current" />
                 <span>Book Free Trial Class</span>
@@ -56,7 +56,7 @@ const SpecialAlert: React.FC<SpecialAlertProps> = ({ onBook }) => {
               
               <a 
                 href="#branches"
-                className="px-16 py-8 rounded-none border border-white/10 bg-white/5 backdrop-blur-md text-white font-black text-sm uppercase tracking-widest flex items-center justify-center space-x-4 hover:bg-white/10 active:scale-95 transition-all"
+                className="px-12 py-8 rounded-none border border-white/10 bg-white/5 backdrop-blur-md text-white font-black text-sm uppercase tracking-widest flex items-center justify-center space-x-4 hover:bg-white/10 active:scale-95 transition-all"
               >
                 <MapPin size={20} />
                 <span>Visit Our Academy</span>

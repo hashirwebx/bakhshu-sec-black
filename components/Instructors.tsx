@@ -32,24 +32,24 @@ const Instructors: React.FC = () => {
 
         {/* Member Satisfaction bar as seen in image */}
         <div className="bg-card-dark p-10 rounded-none border border-white/5 max-w-4xl mx-auto">
-           <h4 className="text-white text-center font-bold text-lg mb-10">Member Satisfaction</h4>
-           <div className="space-y-8">
-              {[
-                { label: "Training Quality", val: "98%" },
-                { label: "Equipment Satisfaction", val: "95%" },
-                { label: "Overall Experience", val: "97%" }
-              ].map((stat, i) => (
-                <div key={i}>
-                  <div className="flex justify-between text-xs font-bold uppercase tracking-widest mb-3">
-                    <span className="text-text-gray">{stat.label}</span>
-                    <span className="text-primary-red">{stat.val}</span>
-                  </div>
-                  <div className="h-1.5 bg-black rounded-none overflow-hidden">
-                    <div className="h-full bg-primary-red transition-all duration-1000 rounded-none" style={{ width: stat.val }}></div>
-                  </div>
+          <h4 className="text-white text-center font-bold text-lg mb-10">Member Satisfaction</h4>
+          <div className="space-y-8">
+            {[
+              { label: "Training Quality", val: "98%" },
+              { label: "Equipment Satisfaction", val: "95%" },
+              { label: "Overall Experience", val: "97%" }
+            ].map((stat, i) => (
+              <div key={i}>
+                <div className="flex justify-between text-xs font-bold uppercase tracking-widest mb-3">
+                  <span className="text-text-gray">{stat.label}</span>
+                  <span className="text-primary-red">{stat.val}</span>
                 </div>
-              ))}
-           </div>
+                <div className="h-1.5 bg-black rounded-none overflow-hidden">
+                  <div className="h-full bg-primary-red transition-all duration-1000 rounded-none" style={{ width: stat.val }}></div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

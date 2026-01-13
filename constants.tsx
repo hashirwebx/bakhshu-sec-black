@@ -129,7 +129,7 @@ export const HERO_SLIDES = [
   {
     headline: "Strong Foundations Start Early",
     subHeadline: "Toddler Physical Development Program (Ages 2.5–4)",
-    description: "A movement-based program supporting balance, coordination, and body awareness through safe, guided activities.",
+    description: "A carefully designed movement-based program that supports early physical milestones, helping toddlers improve balance, coordination, posture, and body awareness through safe, guided activities.",
     primaryBtn: "Enroll Your Toddler",
     secondaryBtn: "Learn About the Program",
     image: "https://ik.imagekit.io/BakhshuTaekwondo/hero%20section%20taewondo%20images/Gemini_Generated_Image_y062lty062lty062.png?updatedAt=1768225451696",

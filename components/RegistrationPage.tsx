@@ -1,9 +1,9 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { CheckCircle, ArrowLeft, Camera, Download, MessageSquare, Send, Instagram, Facebook, Shield } from 'lucide-react';
+import { CheckCircle, Send, ArrowLeft, Printer, Camera, X, Download } from 'lucide-react';
 import { Branch, RegistrationFormData } from '../types';
 import { BRANCHES } from '../constants';
-import { jsPDF } from 'jspdf';
+import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
 interface RegistrationPageProps {
@@ -12,53 +12,57 @@ interface RegistrationPageProps {
 }
 
 const RegistrationPage: React.FC<RegistrationPageProps> = ({ onBack, defaultBranch = 'soan' }) => {
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [step, setStep] = useState<'form' | 'success'>('form');
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const pdfTemplateRef = useRef<HTMLDivElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [formData, setFormData] = useState<RegistrationFormData>({
     fullName: '',
-    fatherName: '',
-    fatherProfession: '',
-    dob: '',
-    gender: 'Male',
-    weight: '',
-    height: '',
-    nationality: 'Pakistani',
-    qualification: '',
-    address: '',
     phone: '',
-    mobile: '',
     email: '',
+    age: '',
     branch: defaultBranch,
     slot: BRANCHES[defaultBranch].slots[0],
     message: ''
   });
 
   const [passportPhoto, setPassportPhoto] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const [extraData, setExtraData] = useState({
+    fatherName: '',
+    fatherProfession: '',
+    dob: '',
+    gender: '',
+    weight: '',
+    height: '',
+    nationality: 'Pakistani',
+    qualification: '',
+    address: '',
+    mobile: ''
+  });
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    document.body.style.overflow = 'auto';
-    return () => {
-      document.body.style.overflow = 'auto';
-    };
   }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitted(true);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setStep('success');
+    window.scrollTo(0, 0);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value,
-      ...(name === 'branch' ? { slot: BRANCHES[value as Branch].slots[0] } : {})
-    }));
+    if (name in formData) {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value,
+        ...(name === 'branch' ? { slot: BRANCHES[value as Branch].slots[0] } : {})
+      }));
+    } else {
+      setExtraData(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -72,410 +76,449 @@ const RegistrationPage: React.FC<RegistrationPageProps> = ({ onBack, defaultBran
     }
   };
 
-  const sendToWhatsApp = () => {
-    const branchInfo = BRANCHES[formData.branch];
-    const message = `*OFFICIAL ADMISSION NOTIFICATION - BAKHSHU TAEKWONDO*\n\n` +
-      `Assalam-o-Alaikum Coach Basharat,\n\n` +
-      `I have successfully completed the digital enrollment process for Bakhshu Taekwondo & Fitness Club. Please find my professional registration details below:\n\n` +
-      `------------------------------------------\n` +
-      `*STUDENT ENROLLMENT PROFILE*\n` +
-      `------------------------------------------\n` +
-      `*Name:* ${formData.fullName}\n` +
-      `*Father's Name:* ${formData.fatherName}\n` +
-      `*Date of Birth:* ${formData.dob}\n` +
-      `*Contact:* ${formData.mobile}\n` +
-      `*Branch:* ${branchInfo.name}\n` +
-      `*Slot:* ${formData.slot}\n` +
-      `------------------------------------------\n\n` +
-      `I have downloaded my digital admission form and will bring the printed copy to my first session.\n\n` +
-      `Regards,\n` +
-      `${formData.fullName}`;
+  const triggerUpload = () => {
+    fileInputRef.current?.click();
+  };
 
-    const whatsappUrl = `https://wa.me/923455304798?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
+  const removePhoto = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setPassportPhoto(null);
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   const downloadFilledForm = async () => {
-    if (!pdfTemplateRef.current) {
-      console.error("PDF Template Reference not found.");
-      return;
-    }
-
+    if (!pdfTemplateRef.current) return;
     setIsGeneratingPDF(true);
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 800));
-
-      const element = pdfTemplateRef.current;
-      const canvas = await html2canvas(element, {
-        scale: 2,
+      const canvas = await html2canvas(pdfTemplateRef.current, {
+        scale: 2, // Optimized scale for the detailed "old" look
         useCORS: true,
-        allowTaint: true,
-        backgroundColor: '#ffffff',
         logging: false,
-        width: 800,
-        height: 1130,
+        backgroundColor: '#ffffff'
       });
 
-      const imgData = canvas.toDataURL('image/jpeg', 1.0);
+      const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
 
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-
-      const canvasWidth = canvas.width;
-      const canvasHeight = canvas.height;
-      const ratio = canvasWidth / pageWidth;
-      const imgHeight = canvasHeight / ratio;
-
-      pdf.addImage(imgData, 'JPEG', 0, 0, pageWidth, Math.min(imgHeight, pageHeight));
-
-      const fileName = `Bakhshu_Admission_${formData.fullName.trim().replace(/\s+/g, '_') || 'Student'}.pdf`;
-      pdf.save(fileName);
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`Admission_Form_${formData.fullName.replace(/\s+/g, '_')}.pdf`);
     } catch (err) {
-      console.error("PDF Generation Error:", err);
-      alert("Encountered an issue while generating the PDF. Please try again.");
+      console.error("PDF generation failed:", err);
     } finally {
       setIsGeneratingPDF(false);
     }
   };
 
+  const getWhatsAppLink = () => {
+    const baseUrl = "https://wa.me/923455304798";
+    const text = encodeURIComponent(
+      `Assalam o Alaikum Coach! 
+I have digitally submitted the Admission Form. 
+
+📋 APPLICANT DETAILS:
+- Name: ${formData.fullName}
+- Father's Name: ${extraData.fatherName}
+- DOB: ${extraData.dob}
+- Gender: ${extraData.gender}
+- Branch: ${BRANCHES[formData.branch].name}
+- Selected Slot: ${formData.slot}
+- Contact: ${formData.phone}
+- Address: ${extraData.address}
+
+I have also downloaded my official PDF form. I am attaching it to this chat now for your records. Please guide me further.`
+    );
+    return `${baseUrl}?text=${text}`;
+  };
+
   return (
-    <div className="min-h-screen bg-[#1F2429] text-white flex flex-col relative overflow-x-hidden">
-
-      <div className="fixed -top-[10%] -left-[10%] w-[50%] h-[50%] bg-primary-red/5 blur-[150px] rounded-full pointer-events-none"></div>
-
-      {isSubmitted ? (
-        <div className="flex-1 flex flex-col items-center justify-center p-6 text-center animate-in zoom-in-95 duration-700">
-          <div className="w-24 h-24 bg-primary-red/10 border border-primary-red/20 flex items-center justify-center mx-auto mb-10 shadow-[0_0_60px_rgba(255,60,60,0.2)]">
-            <CheckCircle className="text-primary-red" size={48} />
-          </div>
-          <h2 className="text-6xl md:text-8xl font-bebas tracking-widest mb-6 uppercase">Registration <span className="text-primary-red">Success</span></h2>
-          <p className="text-text-gray text-xl font-medium max-w-2xl mx-auto mb-16 leading-relaxed uppercase tracking-tight">
-            Your digital admission form has been generated. Please download your document and send the confirmation to the Coach.
-          </p>
-
-          <div className="grid md:grid-cols-2 gap-6 w-full max-w-2xl">
-            <button
-              onClick={downloadFilledForm}
-              disabled={isGeneratingPDF}
-              className="bg-white text-black p-8 font-black text-xs uppercase tracking-[0.4em] flex flex-col items-center justify-center space-y-4 hover:bg-gray-200 transition-all shadow-2xl disabled:opacity-50 group border border-transparent hover:border-black/10"
-            >
-              {isGeneratingPDF ? (
-                <div className="flex items-center space-x-3">
-                  <div className="w-5 h-5 border-2 border-black/20 border-t-black rounded-full animate-spin"></div>
-                  <span>Generating PDF...</span>
-                </div>
-              ) : (
-                <>
-                  <Download size={24} className="group-hover:translate-y-1 transition-transform" />
-                  <span>Download Admission PDF</span>
-                </>
-              )}
-            </button>
-            <button
-              onClick={sendToWhatsApp}
-              className="bg-[#25D366] text-white p-8 font-black text-xs uppercase tracking-[0.4em] flex flex-col items-center justify-center space-y-4 hover:bg-[#128C7E] transition-all shadow-2xl group border border-white/10"
-            >
-              <MessageSquare size={24} fill="white" className="group-hover:scale-110 transition-transform" />
-              <span>Send to Coach (WhatsApp)</span>
-            </button>
-          </div>
-
-          <div className="mt-16">
-            <button onClick={onBack} className="text-white/20 hover:text-white font-black text-[10px] uppercase tracking-[0.8em] transition-colors border-b border-transparent hover:border-white">Return to Home</button>
-          </div>
-        </div>
-      ) : (
-        <div className="py-12 px-6 flex flex-col">
-          <div className="max-w-[1000px] mx-auto w-full mb-8 flex justify-between items-center px-4 relative z-20">
-            <button onClick={onBack} className="flex items-center space-x-2 text-white/40 hover:text-white transition-colors group">
-              <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
-              <span className="text-[10px] font-black uppercase tracking-[0.2em]">Back</span>
-            </button>
-            <div className="flex items-center space-x-2">
-              <img src="https://ik.imagekit.io/BakhshuTaekwondo/bakhshu?updatedAt=1767881121835" alt="Logo" className="w-6 h-6" />
-              <span className="text-[11px] font-black uppercase tracking-[0.4em] text-white/60">Admission Portal</span>
-            </div>
-            <div className="w-20"></div>
-          </div>
-
-          <div className="max-w-[900px] mx-auto w-full bg-[#1F2429] border border-white/10 shadow-[0_50px_100px_rgba(0,0,0,0.6)] relative overflow-hidden flex flex-col">
-            <div className="p-10 md:p-16 relative z-10">
-
-              <div className="flex flex-col md:flex-row justify-between items-start mb-16 gap-8">
-                <div className="flex items-start space-x-8">
-                  <img src="https://ik.imagekit.io/BakhshuTaekwondo/bakhshu?updatedAt=1767881121835" alt="Logo" className="w-28 h-28" />
-                  <div className="pt-2">
-                    <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tighter leading-none text-white mb-2">BAKHSHU <br />TAEKWONDO</h1>
-                    <h2 className="text-xl md:text-2xl font-black uppercase tracking-widest text-white/40 mb-4">& FITNESS CLUB</h2>
-                    <div className="flex space-x-6 text-[8px] font-bold text-white/30 uppercase tracking-widest">
-                      <span className="flex items-center space-x-1"><Instagram size={10} /> <span>@ bakhshutaekwondoclub</span></span>
-                      <span className="flex items-center space-x-1"><Facebook size={10} /> <span>f bakhshutaekwondoclub</span></span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex flex-col items-center">
-                  <div
-                    onClick={() => fileInputRef.current?.click()}
-                    className="w-32 h-40 border-2 border-dashed border-white/10 bg-white/5 flex flex-col items-center justify-center cursor-pointer group hover:border-primary-red transition-all overflow-hidden relative"
-                  >
-                    {passportPhoto ? (
-                      <img src={passportPhoto} className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="text-center p-4">
-                        <Camera size={24} className="mx-auto text-white/20 mb-2 group-hover:text-primary-red transition-colors" />
-                        <p className="text-[8px] font-black uppercase tracking-widest text-white/20 leading-tight">Add Photo</p>
-                      </div>
-                    )}
-                    <input type="file" ref={fileInputRef} onChange={handlePhotoUpload} accept="image/*" className="hidden" />
-                  </div>
-                </div>
-              </div>
-
-              <form onSubmit={handleSubmit} className="flex-1 flex flex-col">
-                <div className="grid md:grid-cols-2 gap-x-12 gap-y-10 mb-10">
-                  {[
-                    { label: 'Name', name: 'fullName', placeholder: "Student Full Name", required: true },
-                    { label: "Father's Name", name: 'fatherName', placeholder: "Guardian Name", required: true },
-                    { label: "Father's Profession", name: 'fatherProfession', placeholder: "Occupation" },
-                    { label: "Date of Birth", name: 'dob', placeholder: "DD/MM/YYYY" },
-                    { label: "Gender", name: 'gender', type: 'select', options: ['Male', 'Female', 'Other'] },
-                    { label: "Weight (kg)", name: 'weight', placeholder: "e.g. 40" },
-                    { label: "Height", name: 'height', placeholder: "e.g. 5'0\"" },
-                    { label: "Nationality", name: 'nationality', placeholder: "Pakistani" },
-                    { label: "Qualification", name: 'qualification', placeholder: "School Grade" },
-                    { label: "Mobile", name: 'mobile', placeholder: "03XXXXXXXXX", required: true },
-                    { label: "Academy Branch", name: 'branch', type: 'select', options: ['soan', 'pindi'], optionLabels: ['Soan Garden (Islamabad)', 'Rawalpindi Branch'] },
-                    { label: "Training Slot", name: 'slot', type: 'select', options: BRANCHES[formData.branch].slots },
-                  ].map((field, i) => (
-                    <div key={i} className="flex flex-col space-y-2 border-b border-white/10 pb-2">
-                      <label className="text-[9px] font-black uppercase tracking-[0.2em] text-white/40">{field.label}</label>
-                      {field.type === 'select' ? (
-                        <select
-                          name={field.name}
-                          value={(formData as any)[field.name]}
-                          onChange={handleChange}
-                          className="bg-transparent text-white font-bold text-sm outline-none appearance-none cursor-pointer"
-                        >
-                          {field.options?.map((opt, j) => (
-                            <option key={j} value={opt} className="bg-[#111]">
-                              {field.optionLabels ? field.optionLabels[j] : opt}
-                            </option>
-                          ))}
-                        </select>
-                      ) : (
-                        <input
-                          type={field.type || 'text'}
-                          name={field.name}
-                          placeholder={field.placeholder}
-                          required={field.required}
-                          value={(formData as any)[field.name]}
-                          onChange={handleChange}
-                          className="bg-transparent text-white font-bold text-sm outline-none"
-                        />
-                      )}
-                    </div>
-                  ))}
-
-                  <div className="md:col-span-2 flex flex-col space-y-2 border-b border-white/10 pb-2">
-                    <label className="text-[9px] font-black uppercase tracking-[0.2em] text-white/40">Address</label>
-                    <input
-                      type="text"
-                      name="address"
-                      placeholder="Current Address"
-                      value={formData.address}
-                      onChange={handleChange}
-                      className="bg-transparent text-white font-bold text-sm outline-none"
-                    />
-                  </div>
-                </div>
-
-                {/* Professional block for Chief Instructor and Fees */}
-                <div className="mb-12 border border-white/5 bg-white/[0.02] p-8 space-y-8">
-                  <div className="grid md:grid-cols-2 gap-8">
-                    <div className="space-y-2">
-                      <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary-red">Chief Instructor</h4>
-                      <div className="flex items-center space-x-4">
-                        <div>
-                          <p className="text-lg font-bold text-white uppercase tracking-tight">Basharat Ali Akhonzada</p>
-                          <p className="text-[9px] font-bold text-white/40 uppercase tracking-widest mt-1">Black Belt 4th Dan (W.T.F)</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="space-y-4">
-                      <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary-red">Official Fees</h4>
-                      <div className="flex justify-between items-center pb-2 border-b border-white/5">
-                        <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Admission</span>
-                        <span className="text-base font-bold text-white tracking-tight">PKR {BRANCHES[formData.branch].fees.registration.split(' ')[0]}</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Monthly</span>
-                        <span className="text-lg font-bold text-primary-red tracking-tight">PKR {BRANCHES[formData.branch].fees.monthly.split(' ')[0]}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full bg-primary-red hover:bg-red-700 text-white py-8 font-black text-sm uppercase tracking-[0.5em] transition-all flex items-center justify-center space-x-4 shadow-[0_20px_50px_rgba(255,60,60,0.25)]"
-                >
-                  <span>Submit Admission Form</span>
-                  <Send size={18} />
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Hidden PDF Template matches the physical form provided */}
-      <div className="fixed left-[-9999px] top-0 pointer-events-none z-0">
-        <div ref={pdfTemplateRef} className="w-[800px] bg-white p-14 text-black flex flex-col font-sans" style={{ minHeight: '1130px' }}>
-
-          {/* Header matching physical layout */}
-          <div className="flex justify-between items-start mb-12">
-            <div className="w-24">
-              <img
-                src="https://ik.imagekit.io/BakhshuTaekwondo/bakhshu?updatedAt=1767881121835"
-                alt="Logo"
-                className="w-full"
-                crossOrigin="anonymous"
-              />
-            </div>
-            <div className="flex-1 text-center px-6 pt-2">
-              <h1 className="text-[30px] font-black uppercase tracking-tight leading-none mb-1">BAKHSHU TAEKWONDO & FITNESS CLUB</h1>
-              <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-gray-500 mb-2 italic">Affiliated with ISLAMABAD TAEKWONDO ASSOCIATION</p>
-              <div className="flex justify-center space-x-6 text-[10px] font-bold text-gray-400 italic">
-                <span>@ bakhshutaekwondoclub</span>
-                <span>f bakhshutaekwondoclub</span>
-              </div>
-              <div className="mt-8 inline-block border-2 border-black px-12 py-1.5">
-                <h2 className="text-xl font-black uppercase tracking-[0.4em]">ADMISSION FORM</h2>
+    <div className="h-screen bg-[#1C1F23] flex flex-col items-center overflow-hidden">
+      {/* RESTORED "OLD" PHYSICAL FORM PDF TEMPLATE */}
+      <div className="fixed left-[-9999px] top-0">
+        <div
+          ref={pdfTemplateRef}
+          className="w-[794px] h-[1123px] bg-white p-10 font-sans text-black flex flex-col overflow-hidden"
+        >
+          {/* Header Area */}
+          <div className="flex justify-between items-start mb-6">
+            <div className="flex items-center space-x-4">
+              <img src="https://ik.imagekit.io/BakhshuTaekwondo/bakhshu?updatedAt=1767881121835" alt="Logo" className="w-20 h-20 object-contain" />
+              <div className="text-left">
+                <h1 className="text-4xl font-black leading-none uppercase tracking-tighter" style={{ fontFamily: 'Bebas Neue, sans-serif' }}>BAKHSHU TAEKWONDO</h1>
+                <h2 className="text-2xl font-black leading-none uppercase tracking-tighter">& FITNESS CLUB</h2>
+                <p className="text-[10px] font-bold uppercase tracking-widest mt-1">Affiliated with ISLAMABAD TAEKWONDO ASSOCIATION</p>
+                <p className="text-[9px] font-bold uppercase opacity-50">@ bakhshutaekwondoclub | f bakhshutaekwondoclub</p>
               </div>
             </div>
-            <div className="w-32 h-40 border-2 border-black relative flex items-center justify-center bg-gray-50 overflow-hidden">
-              {passportPhoto ? (
-                <img src={passportPhoto} className="w-full h-full object-cover" crossOrigin="anonymous" />
-              ) : (
-                <div className="text-[12px] font-black text-gray-200 uppercase rotate-45 text-center px-4">2 PHOTOGRAPHS</div>
-              )}
+            <div className="text-right flex flex-col items-end">
+              <h3 className="text-2xl font-black uppercase tracking-widest border-b-2 border-black pb-1 mb-4">ADMISSION FORM</h3>
+              <div className="border-2 border-black w-32 h-44 flex items-center justify-center relative overflow-hidden bg-slate-50">
+                {passportPhoto ? (
+                  <img src={passportPhoto} className="w-full h-full object-cover" alt="Photo" />
+                ) : (
+                  <span className="text-[11px] font-black rotate-90 whitespace-nowrap opacity-20 uppercase">2 PHOTOGRAPH</span>
+                )}
+              </div>
             </div>
           </div>
 
-          {/* Decorative Calligraphy Background */}
-          <div className="absolute right-12 top-[340px] flex flex-col text-[170px] font-serif text-gray-800 items-center leading-[0.8] select-none pointer-events-none font-bold opacity-80">
-            <span>태</span><span>권</span><span>도</span>
-          </div>
+          <div className="w-full h-px bg-black mb-10"></div>
 
-          {/* Form Fields Section */}
-          <div className="flex-1 space-y-9 pr-48 relative z-10 pt-4">
-            {[
-              { l: "Name", v: formData.fullName },
-              { l: "Father's Name", v: formData.fatherName },
-              { l: "Father's Profession", v: formData.fatherProfession || '___________________________' },
-              { l: "Date of Birth", v: formData.dob || '___________________________' },
-              { l: "Gender", v: formData.gender },
-            ].map((item, idx) => (
-              <div key={idx} className="flex items-end">
-                <span className="text-[15px] font-black uppercase min-w-[190px] leading-none mb-1">{item.l}:</span>
-                <span className="flex-1 border-b border-black text-xl font-bold uppercase px-2 pb-1 leading-none">{item.v}</span>
+          {/* Form Fields */}
+          <div className="flex-1 space-y-5 relative z-10">
+            {/* Vertical Calligraphy Background */}
+            <div className="absolute right-0 top-1/2 -translate-y-1/2 opacity-10 pointer-events-none">
+              <div className="text-[10rem] font-black leading-[0.8] flex flex-col items-center">
+                <span>태</span><span>권</span><span>도</span>
               </div>
-            ))}
-
-            <div className="flex items-end space-x-4">
-              <span className="text-[15px] font-black uppercase min-w-[190px] leading-none mb-1">Weight:</span>
-              <span className="flex-1 border-b border-black text-xl font-bold uppercase px-2 pb-1 leading-none">{formData.weight || '_______'} Kg.</span>
-              <span className="text-[15px] font-black uppercase px-6 leading-none mb-1">Height:</span>
-              <span className="flex-1 border-b border-black text-xl font-bold uppercase px-2 pb-1 leading-none">{formData.height || '_______'}</span>
             </div>
 
             {[
-              { l: "Nationality", v: formData.nationality || 'PAKISTANI' },
-              { l: "Qualification", v: formData.qualification || '___________________________' },
-              { l: "Address", v: formData.address || '________________________________________________________________________________', multiline: true },
-              { l: "Phone", v: formData.phone || '___________________________' },
-              { l: "Mobile", v: formData.mobile },
-            ].map((item, idx) => (
-              <div key={idx} className="flex items-start flex-col space-y-1">
-                <div className="flex items-end w-full">
-                  <span className="text-[15px] font-black uppercase min-w-[190px] leading-none mb-1">{item.l}:</span>
-                  <span className="flex-1 border-b border-black text-xl font-bold uppercase px-2 pb-1 leading-none">
-                    {!item.multiline ? item.v : ''}
-                  </span>
-                </div>
-                {item.multiline && (
-                  <div className="border-b border-black w-full h-11 flex items-end text-xl font-bold uppercase px-2 pb-1">{item.v}</div>
+              { label: "Name", value: formData.fullName },
+              { label: "Father's Name", value: extraData.fatherName },
+              { label: "Father's Profession", value: extraData.fatherProfession },
+              { label: "Date of Birth", value: extraData.dob },
+              { label: "Gender", value: extraData.gender },
+              { label: "Weight", value: extraData.weight ? `${extraData.weight} Kg` : '', half: true, secondLabel: "Height", secondValue: extraData.height },
+              { label: "Nationality", value: extraData.nationality },
+              { label: "Qualification", value: extraData.qualification },
+              { label: "Address", value: extraData.address, isLong: true },
+              { label: "Phone", value: formData.phone },
+              { label: "Mobile", value: extraData.mobile || formData.phone }
+            ].map((f, i) => (
+              <div key={i} className={`flex items-end space-x-2 w-full`}>
+                <div className="text-[11px] font-black uppercase whitespace-nowrap mb-1">{f.label}:</div>
+                {f.half ? (
+                  <div className="flex-1 flex items-end">
+                    <div className="flex-1 border-b border-black text-sm font-bold pb-1 px-2 italic min-h-[22px]">{f.value}</div>
+                    <div className="text-[11px] font-black uppercase whitespace-nowrap mb-1 ml-4">{f.secondLabel}:</div>
+                    <div className="flex-1 border-b border-black text-sm font-bold pb-1 px-2 italic min-h-[22px]">{f.secondValue}</div>
+                  </div>
+                ) : (
+                  <div className={`flex-1 border-b border-black text-sm font-bold pb-1 px-2 italic min-h-[22px] ${f.isLong ? 'min-h-[40px]' : ''}`}>
+                    {f.value}
+                  </div>
                 )}
               </div>
             ))}
-          </div>
 
-          {/* Official Oath matches physical form text */}
-          <div className="mt-12 bg-gray-50/50 p-8 border border-gray-200">
-            <h3 className="text-base font-black uppercase border-b-2 border-black inline-block mb-6 tracking-widest">TAEKWONDO STUDENT OATH</h3>
-            <ul className="space-y-4 text-[13px] font-bold leading-relaxed uppercase tracking-wider text-gray-800">
-              <li className="flex items-start">
-                <span className="mr-3 font-black text-xl leading-none mt-[-2px]">*</span>
-                <span>I know what Taekwondo represents, and I will listen and obey my Parents, Teachers, Master and Instructors.</span>
-              </li>
-              <li className="flex items-start">
-                <span className="mr-3 font-black text-xl leading-none mt-[-2px]">*</span>
-                <span>I will demonstrate my Taekwondo discipline in the dojang, my school, and most importantly at home.</span>
-              </li>
-              <li className="flex items-start">
-                <span className="mr-3 font-black text-xl leading-none mt-[-2px]">*</span>
-                <span>I will only use my Taekwondo ability to defend myself, never in an aggressive manner.</span>
-              </li>
-              <li className="flex items-start">
-                <span className="mr-3 font-black text-xl leading-none mt-[-2px]">*</span>
-                <span>I will respect myself, my family, my school and my country.</span>
-              </li>
-              <li className="flex items-start">
-                <span className="mr-3 font-black text-xl leading-none mt-[-2px]">*</span>
-                <span>I will always try my best in everything I do, including Taekwondo, School Studies and everything else.</span>
-              </li>
-              <li className="flex items-start mt-4 pt-4 border-t border-gray-200 italic font-black text-gray-600">
-                <span className="mr-3 text-xl leading-none mt-[-2px]">*</span>
-                <span>Children who do not obey their parents <span className="underline font-black">CHEERFULLY</span> may be reduced in Rank.</span>
-              </li>
-            </ul>
-          </div>
+            {/* Oath Section */}
+            <div className="mt-10 border-2 border-black p-6 bg-white">
+              <h3 className="text-lg font-black uppercase underline mb-4 text-center tracking-widest text-black">TAEKWONDO STUDENT OATH</h3>
+              <ul className="text-[10px] font-bold space-y-2 uppercase leading-snug text-black">
+                <li>* I know what Taekwondo represents, and I will listen and obey my Parents, Teachers, Master and Instructors.</li>
+                <li>* I will demonstrate my Taekwondo discipline in the dojang, my school, and most importantly at home.</li>
+                <li>* I will only use my Taekwondo ability to defend myself, never in an aggressive manner.</li>
+                <li>* I will respect myself, my family, my school and my country.</li>
+                <li>* I will always try my best in everything I do, including Taekwondo, School Studies and everything else.</li>
+                <li className="italic text-blue-600 pt-2 font-black border-t border-black/5 mt-2">
+                  * Children who do not obey their parents CHEERFULLY may be reduced in Rank.
+                </li>
+              </ul>
+            </div>
 
-          {/* Signatures exactly as shown in Screenshot 1 */}
-          <div className="mt-20 grid grid-cols-2 gap-48">
-            <div className="text-center">
-              <div className="border-t border-black pt-2 mx-auto w-[280px]">
-                <p className="text-[13px] font-bold uppercase tracking-widest text-gray-800">Parent's Signature</p>
+            {/* Signature Area */}
+            <div className="flex justify-between items-end mt-16 mb-8">
+              <div className="w-56 text-center">
+                <div className="border-t border-black pt-2 text-[10px] font-black uppercase tracking-widest">Parent's Signature</div>
+              </div>
+              <div className="w-64 text-center">
+                <div className="text-[9px] font-bold mb-1 italic opacity-60">Chief Instructor's Signature</div>
+                <div className="text-base font-black leading-none uppercase tracking-tight">Basharat Ali Akhonzada</div>
+                <div className="text-[8px] font-bold uppercase opacity-40">Black Belt 4th Dan (W.T.F)</div>
+                <div className="w-full border-t border-black mt-2"></div>
               </div>
             </div>
-            <div className="text-center">
-              <div className="border-t border-black pt-2 mx-auto w-[280px]">
-                <p className="text-[13px] font-bold uppercase tracking-widest text-gray-800 mb-1">Chief Instructor's Signature</p>
-                <p className="text-[17px] font-black uppercase text-black">Basharat Ali Akhonzada</p>
-                <p className="text-[11px] font-bold uppercase text-gray-500">Black Belt 4th Dan ( W.T.F )</p>
-              </div>
-            </div>
-          </div>
 
-          {/* Fee Footer Section exactly as shown in Screenshot 1 */}
-          <div className="mt-auto pt-16 text-[16px] font-black uppercase text-black tracking-tight">
-            <div className="flex items-center whitespace-nowrap">
-              <span className="font-black">FEE STRUCTURE:</span>
-              <span className="ml-4">Admission</span>
-              <span className="border-b border-black w-24 mx-2 mt-[-6px]"></span>
-              <span className="ml-2">Monthly</span>
-              <span className="border-b border-black w-36 mx-2 mt-[-6px]"></span>
-              <span className="ml-2">Membership Card</span>
-              <span className="border-b border-black flex-1 mx-2 mt-[-6px]"></span>
+            {/* Bottom Info */}
+            <div className="border-t-2 border-black pt-6 flex justify-between text-[11px] font-black uppercase">
+              <div className="flex items-center space-x-2">
+                <span>FEE STRUCTURE: Admission</span>
+                <span className="border-b border-black min-w-[60px] text-center italic">1000/-</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <span>Monthly</span>
+                <span className="border-b border-black min-w-[60px] text-center italic">5000/-</span>
+              </div>
+              {/* <div className="flex items-center space-x-2">
+                <span>Membership Card</span>
+                <span className="border-b border-black min-w-[60px] text-center italic">200/-</span>
+              </div> */}
             </div>
           </div>
         </div>
       </div>
 
+      {/* REGISTRATION PORTAL UI */}
+      <div className="w-full bg-[#1C1F23] border-b border-white/10 py-4 px-6 flex justify-between items-center sticky top-0 z-[100] shadow-sm">
+        <button
+          onClick={onBack}
+          className="flex items-center space-x-2 text-[10px] font-black uppercase tracking-widest text-white/60 hover:text-white transition-colors"
+        >
+          <ArrowLeft size={16} />
+          <span>Back to Home</span>
+        </button>
+        <div className="flex items-center space-x-2">
+          <img src="https://ik.imagekit.io/BakhshuTaekwondo/bakhshu?updatedAt=1767881121835" alt="Logo" className="w-8 h-8" />
+          <span className="font-bebas text-lg tracking-widest uppercase text-white">Admission Portal</span>
+        </div>
+        <div className="w-24"></div>
+      </div>
+
+      <div className="w-full max-w-[1000px] p-6 md:p-8 lg:p-12 flex-1 overflow-y-auto">
+        {step === 'form' ? (
+          <div className="bg-[#1C1F23] p-6 md:p-8 shadow-2xl border-t-[12px] border-white/20 animate-in fade-in slide-in-from-bottom-6 duration-700 text-white">
+            <div className="flex flex-col md:flex-row justify-between items-start border-b-2 border-black pb-12 mb-16 relative">
+              <div className="flex items-center space-x-6 mb-8 md:mb-0">
+                <img
+                  src="https://ik.imagekit.io/BakhshuTaekwondo/bakhshu?updatedAt=1767881121835"
+                  alt="Official Logo"
+                  className="w-24 h-24 object-contain"
+                />
+                <div className="text-left">
+                  <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-[0.85] mb-2 uppercase">BAKHSHU TAEKWONDO</h1>
+                  <h2 className="text-2xl md:text-3xl font-black tracking-tighter leading-none mb-3 uppercase">& FITNESS CLUB</h2>
+                  <p className="text-[11px] font-bold uppercase tracking-widest opacity-60">Affiliated with ISLAMABAD TAEKWONDO ASSOCIATION</p>
+                  <p className="text-[10px] font-bold uppercase tracking-tighter opacity-40 mt-1">@ bakhshutaekwondoclub | f bakhshutaekwondoclub</p>
+                </div>
+              </div>
+
+              <div className="flex flex-col items-center md:items-end w-full md:w-auto">
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handlePhotoUpload}
+                  accept="image/*"
+                  className="hidden"
+                />
+
+                <div
+                  onClick={triggerUpload}
+                  className="border-2 border-black w-36 h-48 flex flex-col items-center justify-center text-center relative mb-6 bg-slate-50/50 cursor-pointer group overflow-hidden"
+                >
+                  <span className="text-[11px] font-black rotate-90 absolute right-[-15px] top-1/2 -translate-y-1/2 whitespace-nowrap uppercase">2 PHOTOGRAPH</span>
+
+                  {passportPhoto ? (
+                    <>
+                      <img src={passportPhoto} alt="Passport Preview" className="w-full h-full object-cover" />
+                      <button
+                        onClick={removePhoto}
+                        className="absolute top-1 right-1 bg-black/50 text-white p-1 hover:bg-black transition-colors"
+                      >
+                        <X size={12} />
+                      </button>
+                    </>
+                  ) : (
+                    <div className="flex flex-col items-center space-y-2 opacity-10 group-hover:opacity-30 transition-opacity">
+                      <Printer size={32} />
+                      <Camera size={24} />
+                    </div>
+                  )}
+                </div>
+                <button
+                  type="button"
+                  onClick={triggerUpload}
+                  className="bg-black text-white px-8 py-3 w-full md:w-auto text-center hover:bg-primary-blue transition-colors active:scale-95 shadow-lg"
+                >
+                  <span className="text-sm font-black tracking-[0.3em] uppercase">Upload Image</span>
+                </button>
+              </div>
+
+              <div className="absolute right-0 top-72 hidden xl:block select-none pointer-events-none opacity-[0.03]">
+                <span className="text-[12rem] font-black leading-none flex flex-col text-black">
+                  <span>태</span>
+                  <span>권</span>
+                  <span>도</span>
+                </span>
+              </div>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-10 relative z-10 font-serif">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-8">
+                {[
+                  { label: "Name", name: "fullName", placeholder: "Applicant's Full Name", required: true },
+                  { label: "Father's Name", name: "fatherName", placeholder: "Guardian / Father's Name" },
+                  { label: "Father's Profession", name: "fatherProfession", placeholder: "Current Occupation" },
+                  { label: "Date of Birth", name: "dob", type: "date" },
+                  { label: "Gender", name: "gender", isSelect: true, options: ["Male", "Female", "Other"] },
+                  { label: "Weight (Kg)", name: "weight", type: "number", placeholder: "KG" },
+                  { label: "Height", name: "height", placeholder: "Feet/Inches" },
+                  { label: "Nationality", name: "nationality", placeholder: "Pakistani" },
+                  { label: "Qualification", name: "qualification", placeholder: "Last Degree / Grade" },
+                  { label: "Mobile Number", name: "phone", placeholder: "03XX-XXXXXXX", required: true },
+                ].map((field) => (
+                  <div key={field.name} className="flex flex-col space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-[0.2em] flex items-center text-white/80">
+                      {field.label} {field.required && <span className="text-red-600 ml-1">*</span>}
+                    </label>
+                    <div className="relative">
+                      {field.isSelect ? (
+                        <select
+                          name={field.name}
+                          onChange={handleChange}
+                          className="w-full border-b border-black/20 py-3 focus:border-black outline-none transition-colors bg-transparent text-base font-bold appearance-none rounded-none"
+                        >
+                          <option value="">Select Option</option>
+                          {field.options?.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                        </select>
+                      ) : (
+                        <input
+                          type={field.type || "text"}
+                          name={field.name}
+                          required={field.required}
+                          onChange={handleChange}
+                          placeholder={field.placeholder}
+                          className="w-full border-b border-black/20 py-3 focus:border-black outline-none transition-colors bg-transparent text-base font-bold placeholder:opacity-20 rounded-none"
+                        />
+                      )}
+                    </div>
+                  </div>
+                ))}
+
+                <div className="flex flex-col space-y-2">
+                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-white/80">Preferred Branch</label>
+                  <select name="branch" value={formData.branch} onChange={handleChange} className="w-full border-b border-black/20 py-3 focus:border-black outline-none bg-transparent text-base font-bold rounded-none">
+                    <option value="soan">Soan Garden (Islamabad)</option>
+                    <option value="pindi">Haidri Chowk (Rawalpindi)</option>
+                  </select>
+                </div>
+                <div className="flex flex-col space-y-2">
+                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-white/80">Available Slot</label>
+                  <select name="slot" value={formData.slot} onChange={handleChange} className="w-full border-b border-black/20 py-3 focus:border-black outline-none bg-transparent text-base font-bold rounded-none">
+                    {BRANCHES[formData.branch].slots.map(s => <option key={s} value={s}>{s}</option>)}
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex flex-col space-y-2 pt-6">
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-white/80">Postal Address</label>
+                <textarea
+                  name="address"
+                  onChange={handleChange}
+                  rows={3}
+                  className="w-full border-b border-black/20 py-3 focus:border-black outline-none transition-colors bg-transparent text-base font-bold placeholder:opacity-20 resize-none rounded-none"
+                  placeholder="Street, House No, Sector/Block, City"
+                ></textarea>
+              </div>
+
+              <div className="mt-20 p-10 border-2 border-white/20 bg-[#1C1F23] relative overflow-hidden">
+                <div className="absolute top-0 right-0 p-4 opacity-[0.05]">
+                  <img src="https://ik.imagekit.io/BakhshuTaekwondo/bakhshu?updatedAt=1767881121835" className="w-40" alt="Watermark" />
+                </div>
+                <h3 className="text-2xl font-black uppercase tracking-[0.2em] border-b border-white/20 pb-4 mb-8 text-center italic text-white">TAEKWONDO STUDENT OATH</h3>
+                <ul className="space-y-4 text-[11px] font-bold leading-relaxed uppercase tracking-wide text-white">
+                  <li className="flex items-start"><span className="mr-3 mt-1">•</span> I know what Taekwondo represents, and I will listen and obey my Parents, Teachers, Master and Instructors.</li>
+                  <li className="flex items-start"><span className="mr-3 mt-1">•</span> I will demonstrate my Taekwondo discipline in the dojang, my school, and most importantly at home.</li>
+                  <li className="flex items-start"><span className="mr-3 mt-1">•</span> I will only use my Taekwondo ability to defend myself, never in an aggressive manner.</li>
+                  <li className="flex items-start"><span className="mr-3 mt-1">•</span> I will respect myself, my family, my school and my country.</li>
+                  <li className="flex items-start"><span className="mr-3 mt-1">•</span> I will always try my best in everything I do, including Taekwondo, School Studies and everything else.</li>
+                  <li className="italic text-primary-blue bg-primary-blue/5 p-4 mt-6 border-l-4 border-primary-blue text-white">
+                    * Children who do not obey their parents <span className="font-black underline uppercase italic">CHEERFULLY</span> may be reduced in Rank.
+                  </li>
+                </ul>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-20 pt-20 pb-10 border-t border-black/10">
+                <div className="flex flex-col items-center">
+                  <div className="w-full border-t border-black pt-3 text-center">
+                    <span className="text-[11px] font-black uppercase tracking-[0.2em]">Applicant / Parent's Signature</span>
+                  </div>
+                </div>
+                <div className="flex flex-col items-center text-center">
+                  <div className="italic text-sm font-bold mb-2">Chief Instructor's Signature</div>
+                  <div className="font-black text-lg uppercase leading-none tracking-tight">Basharat Ali Akhonzada</div>
+                  <div className="text-[10px] font-bold opacity-50 uppercase tracking-widest mt-1">Black Belt 4th Dan (W.T.F)</div>
+                  <div className="w-full border-t border-black mt-3"></div>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap justify-between items-center text-[10px] font-black uppercase tracking-[0.4em] pt-8 opacity-60 border-t border-black/5">
+                <div className="flex items-center space-x-3 mb-4 md:mb-0">
+                  <span>FEE STRUCTURE: Admission</span>
+                  <div className="text-sm font-serif italic text-black font-black border-b border-black min-w-[60px] text-center">1500/-</div>
+                </div>
+                <div className="flex items-center space-x-3 mb-4 md:mb-0">
+                  <span>Monthly</span>
+                  <div className="text-sm font-serif italic text-black font-black border-b border-black min-w-[60px] text-center">2500/-</div>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <span>Membership Card</span>
+                  <div className="text-sm font-serif italic text-black font-black border-b border-black min-w-[60px] text-center">1000/-</div>
+                </div>
+              </div>
+
+              <div className="pt-12">
+                <button
+                  type="submit"
+                  className="w-full bg-black text-white py-8 font-black text-base uppercase tracking-[0.5em] transition-all hover:bg-primary-blue shadow-2xl active:scale-95 flex items-center justify-center space-x-6 group"
+                >
+                  <span>Register Application</span>
+                  <Send size={24} className="group-hover:translate-x-2 transition-transform" />
+                </button>
+                <p className="text-center mt-6 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                  By submitting this form, you agree to the academy's terms of service and the Student Oath.
+                </p>
+              </div>
+            </form>
+          </div>
+        ) : (
+          <div className="bg-[#1C1F23] p-12 md:p-20 text-center shadow-2xl border-t-[12px] border-white/20 animate-in zoom-in duration-500 max-w-2xl mx-auto text-white">
+            <div className="w-28 h-28 bg-black text-white rounded-full flex items-center justify-center mx-auto mb-10 shadow-xl">
+              <CheckCircle size={64} />
+            </div>
+            <h2 className="text-6xl font-bebas mb-6 leading-none text-white">Registration Successful</h2>
+            <p className="text-slate-500 mb-12 text-xl font-serif italic leading-relaxed">
+              Assalam o Alaikum <span className="text-white font-bold">{formData.fullName}</span>! Your admission request for the <span className="text-black font-bold uppercase tracking-widest">{BRANCHES[formData.branch].name}</span> has been digitally filed.
+            </p>
+
+            <div className="flex flex-col gap-4">
+              <button
+                onClick={downloadFilledForm}
+                disabled={isGeneratingPDF}
+                className="w-full bg-slate-900 text-white py-6 rounded-none font-black text-sm tracking-[0.3em] flex items-center justify-center space-x-3 active:scale-95 transition-all shadow-xl hover:bg-black disabled:opacity-50"
+              >
+                {isGeneratingPDF ? (
+                  <div className="animate-spin rounded-full h-5 w-5 border-2 border-white/20 border-t-white"></div>
+                ) : (
+                  <Download size={20} />
+                )}
+                <span>{isGeneratingPDF ? 'Generating Form...' : 'Download Official Form (PDF)'}</span>
+              </button>
+
+              <a
+                href={getWhatsAppLink()}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full bg-[#25D366] text-white py-6 rounded-none font-black text-sm uppercase tracking-[0.3em] flex items-center justify-center space-x-3 active:scale-95 transition-all shadow-xl hover:brightness-110"
+              >
+                <img src="https://img.icons8.com/color/48/whatsapp--v1.png" className="w-8 h-8" alt="WhatsApp" />
+                <span>Confirm on WhatsApp</span>
+              </a>
+
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2">
+                * Note: Please attach the downloaded PDF in the WhatsApp chat for official records.
+              </p>
+
+              <button
+                onClick={onBack}
+                className="w-full border-2 border-black text-white py-5 rounded-none font-black text-sm uppercase tracking-[0.3em] hover:bg-black hover:text-white active:scale-95 transition-all mt-4"
+              >
+                Return to Main Website
+              </button>
+            </div>
+
+            <div className="mt-16 pt-10 border-t border-black/5">
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Application Reference ID: {Math.random().toString(36).substr(2, 9).toUpperCase()}</p>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div className="mt-auto py-10 text-center opacity-20">
+        <p className="text-[10px] font-black tracking-[0.5em] uppercase">© 2026 BAKHSHU TAEKWONDO ACADEMY • ISLAMABAD</p>
+      </div>
     </div>
   );
 };

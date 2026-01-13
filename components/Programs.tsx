@@ -46,14 +46,14 @@ const Programs: React.FC = () => {
             Structured Programs <br />for <span className="text-primary-red">Every Child</span>
           </h2>
           <p className="text-text-gray font-medium text-lg max-w-2xl mx-auto">
-            We offer age-appropriate and level-based programs with a clear belt progression system that keeps children motivated and goal-oriented.
+            Each program follows a clear belt progression system that keeps children motivated and goal-oriented
           </p>
         </div>
 
         <div ref={cardsRef} className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {PROGRAMS_LIST.map((cat, idx) => (
-            <div 
-              key={idx} 
+            <div
+              key={idx}
               className="bg-white/[0.02] backdrop-blur-xl rounded-none overflow-hidden group border border-white/10 hover:border-primary-red/40 transition-all duration-700 hover:-translate-y-4 cursor-pointer relative shadow-2xl"
               style={{ opacity: 1 }} // Safety fallback for visibility
             >

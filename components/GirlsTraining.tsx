@@ -79,10 +79,10 @@ const GirlsTraining: React.FC = () => {
               <span className="text-[10px] text-primary-red font-black uppercase tracking-[0.3em]">A Space Where Girls Grow Strong</span>
             </div>
             <h2 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-none tracking-tight">
-              SAFE & EMPOWERING <br /><span className="text-primary-red">FOR GIRLS</span>
+              SAFE & EMPOWERING<br /><span className="text-primary-red">Training FOR GIRLS</span>
             </h2>
             <p className="text-text-gray text-lg font-medium leading-relaxed max-w-xl">
-              We provide a secure, respectful, and encouraging environment where girls feel confident to learn, grow, and build unshakeable self-belief.
+              We provide a secure, respectful, and encouraging environment where girls feel confident to learn and grow.
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4">

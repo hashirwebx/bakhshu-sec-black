@@ -62,7 +62,7 @@ const Benefits: React.FC = () => {
         {/* New Section Headline Header Added Here */}
         <div className="benefits-header mb-20 relative">
           <h2 className="text-6xl md:text-[10rem] font-bebas text-white/5 absolute -top-16 md:-top-24 left-0 select-none tracking-tighter uppercase leading-none pointer-events-none">Discipline</h2>
-          <h3 className="text-4xl md:text-7xl font-bebas text-white tracking-widest uppercase relative z-10 leading-none">UNLEASH THEIR <span className="text-primary-red">POTENTIAL</span></h3>
+          <h3 className="text-4xl md:text-7xl font-bebas text-white tracking-widest uppercase relative z-10 leading-none">Benefits of  <span className="text-primary-red">Taekwondo</span></h3>
           <div className="w-32 h-1 bg-primary-red mt-8"></div>
         </div>
 

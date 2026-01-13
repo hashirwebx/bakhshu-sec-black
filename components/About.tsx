@@ -51,7 +51,7 @@ const About: React.FC = () => {
         {/* New Section Headline Header */}
         <div className="about-header mb-24 relative">
           <h2 className="text-6xl md:text-[10rem] font-bebas text-white/5 absolute -top-16 md:-top-24 left-0 select-none tracking-tighter uppercase leading-none pointer-events-none">Martial Arts</h2>
-          <h3 className="text-4xl md:text-7xl font-bebas text-white tracking-widest uppercase relative z-10 leading-none">THE SPIRIT OF <span className="text-primary-red">EXCELLENCE</span></h3>
+          <h3 className="text-4xl md:text-7xl font-bebas text-white tracking-widest uppercase relative z-10 leading-none">Expert Coaching  <span className="text-primary-red">You Can Trust</span></h3>
           <div className="w-32 h-1 bg-primary-red mt-8"></div>
         </div>
 
@@ -69,9 +69,6 @@ const About: React.FC = () => {
           </div>
 
           <div className="about-text space-y-8">
-            <div className="inline-block px-4 py-2 bg-primary-red/10 border border-primary-red/20 rounded-none">
-              <span className="text-primary-red font-black uppercase tracking-[0.3em] text-[10px]">Expert Coaching You Can Trust</span>
-            </div>
             <h2 className="text-5xl md:text-7xl font-bold text-white leading-[1] tracking-tight">
               LED BY NATIONAL-LEVEL <span className="text-primary-red">EXPERIENCE</span>
             </h2>

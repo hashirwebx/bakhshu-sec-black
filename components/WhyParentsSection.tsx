@@ -65,7 +65,7 @@ const WhyParentsSection: React.FC = () => {
           <div className="parents-content-left order-2 lg:order-1">
             <div className="flex items-center space-x-3 mb-6">
               <Heart className="text-primary-red" size={24} />
-              <span className="text-primary-red font-black uppercase tracking-[0.4em] text-[10px]">A Trusted Academy for Children</span>
+              <span className="text-primary-red font-black uppercase tracking-[0.4em] text-[10px]">Discipline You Can See at Home</span>
             </div>
             <h2 className="text-4xl md:text-6xl font-bold text-white mb-8 tracking-tight">
               Why Parents Choose <br /><span className="text-primary-red">Bakhshu Club</span>

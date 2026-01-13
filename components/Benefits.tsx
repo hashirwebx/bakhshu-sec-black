@@ -11,7 +11,7 @@ const Benefits: React.FC = () => {
   useEffect(() => {
     if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
       gsap.registerPlugin(ScrollTrigger);
-      
+
       const ctx = gsap.context(() => {
         gsap.from(".benefits-header", {
           y: -30,
@@ -58,7 +58,7 @@ const Benefits: React.FC = () => {
   return (
     <section id="benefits" ref={sectionRef} className="py-32 bg-primary-black border-t border-white/5 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6">
-        
+
         {/* New Section Headline Header Added Here */}
         <div className="benefits-header mb-20 relative">
           <h2 className="text-6xl md:text-[10rem] font-bebas text-white/5 absolute -top-16 md:-top-24 left-0 select-none tracking-tighter uppercase leading-none pointer-events-none">Discipline</h2>
@@ -67,19 +67,19 @@ const Benefits: React.FC = () => {
         </div>
 
         <div className="grid lg:grid-cols-12 gap-20 items-center">
-          
+
           <div className="lg:col-span-5 benefits-visual relative">
             <div className="relative z-10 rounded-none overflow-hidden border border-white/10 shadow-2xl group">
-              <img 
-                src="https://scontent.fxjm2-1.fna.fbcdn.net/v/t1.6435-9/55795209_2396752590344695_7584201530727727104_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=833d8c&_nc_ohc=iwsIfFfsKX4Q7kNvwFwsTfz&_nc_oc=Admm4hHJBwXB90QeVSywkbCyKHAOe1XGeh2P_aSgxpqXy4wryFNspgQ8XzhNH2PWlRk&_nc_zt=23&_nc_ht=scontent.fxjm2-1.fna&_nc_gid=hTcEBYZ2RvIrguz80X3cJw&oh=00_AfoI5DmWS3_MICvRiz9ZNtKzfszMWWGocKsjG5askkJqHw&oe=698D73F5" 
-                alt="Empowering Young Minds" 
+              <img
+                src="https://scontent.fxjm2-1.fna.fbcdn.net/v/t1.6435-9/55795209_2396752590344695_7584201530727727104_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=833d8c&_nc_ohc=iwsIfFfsKX4Q7kNvwFwsTfz&_nc_oc=Admm4hHJBwXB90QeVSywkbCyKHAOe1XGeh2P_aSgxpqXy4wryFNspgQ8XzhNH2PWlRk&_nc_zt=23&_nc_ht=scontent.fxjm2-1.fna&_nc_gid=hTcEBYZ2RvIrguz80X3cJw&oh=00_AfoI5DmWS3_MICvRiz9ZNtKzfszMWWGocKsjG5askkJqHw&oe=698D73F5"
+                alt="Empowering Young Minds"
                 className="w-full h-[550px] object-cover transition-all duration-1000 grayscale brightness-75 hover:grayscale-0 rounded-none"
               />
-              
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity"></div>
-              
+
+              <div className="absolute -bottom-10 -right-10 w-64 h-64 bg-primary-red/10 blur-[120px] -z-10 rounded-none"></div>
+
               <div className="absolute bottom-8 left-8 p-8 bg-white/[0.05] backdrop-blur-2xl border border-white/10 text-white rounded-none shadow-2xl">
-                <p className="text-3xl font-bold leading-tight">Empowering <br/>Young Minds</p>
+                <p className="text-3xl font-bold leading-tight">Empowering <br />Young Minds</p>
                 <p className="text-[10px] font-black uppercase tracking-widest mt-2 opacity-80">Since 2010</p>
               </div>
             </div>
@@ -92,7 +92,7 @@ const Benefits: React.FC = () => {
                 Benefits of Taekwondo for Kids
               </h2>
               <p className="text-primary-red font-black uppercase tracking-[0.4em] text-[10px] mb-8 block">More Than Just a Sport</p>
-              
+
               <p className="text-text-gray text-xl font-medium leading-relaxed max-w-xl">
                 Taekwondo helps children develop life skills that go far beyond the mat:
               </p>

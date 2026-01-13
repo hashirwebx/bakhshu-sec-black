@@ -95,7 +95,7 @@ const WhyParentsSection: React.FC = () => {
                 className="w-full h-full object-cover grayscale opacity-50 group-hover:grayscale-0 transition-all duration-1000 rounded-none"
                 alt="Safe training environment"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-primary-black via-transparent to-transparent"></div>
+              <div className="absolute -bottom-10 -right-10 w-64 h-64 bg-primary-red/10 blur-[120px] -z-10 rounded-none"></div>
 
               <div className="absolute bottom-12 left-12 right-12 p-8 bg-black/60 backdrop-blur-xl border border-white/10 rounded-none">
                 <h4 className="text-white font-bold text-xl mb-2">Modern & Safe Facility</h4>

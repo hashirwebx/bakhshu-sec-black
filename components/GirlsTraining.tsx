@@ -11,7 +11,7 @@ const GirlsTraining: React.FC = () => {
   useEffect(() => {
     if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
       gsap.registerPlugin(ScrollTrigger);
-      
+
       const ctx = gsap.context(() => {
         gsap.from(".girls-header", {
           y: -40,
@@ -51,7 +51,7 @@ const GirlsTraining: React.FC = () => {
   return (
     <section ref={sectionRef} className="py-32 bg-primary-black border-t border-white/5 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-6">
-        
+
         {/* Section Headline Header */}
         <div className="girls-header mb-20 relative">
           <h2 className="text-6xl md:text-[10rem] font-bebas text-white/5 absolute -top-16 md:-top-24 left-0 select-none tracking-tighter uppercase leading-none pointer-events-none">Strength</h2>
@@ -60,15 +60,15 @@ const GirlsTraining: React.FC = () => {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-20 items-center">
-          
+
           <div className="girls-content-left relative">
             <div className="aspect-[4/5] bg-card-dark rounded-none overflow-hidden border border-white/5 shadow-2xl relative">
-               <img 
-                 src="https://scontent.fisb5-2.fna.fbcdn.net/v/t39.30808-6/612272142_1421163306245004_8480897104380876877_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=833d8c&_nc_ohc=o7a0EhERo_0Q7kNvwFCmZuq&_nc_oc=AdmjrYcwXzmoVRs-1l4AotBOO-_0iIMjTpWpAFY27Hs5deSmBtbniiiAoyGEES_yqBI&_nc_zt=23&_nc_ht=scontent.fisb5-2.fna&_nc_gid=PXHACtW-dcyq00oYVcEceA&oh=00_AfpjJAXfmcUMy7hMKRqBKXIi6IUrZGRxjnS6zUkDWLDJvA&oe=6966F567" 
-                 className="w-full h-full object-cover grayscale brightness-75 hover:grayscale-0 transition-all duration-1000 rounded-none"
-                 alt="Girls Training"
-               />
-               <div className="absolute inset-0 bg-primary-red/10 mix-blend-overlay"></div>
+              <img
+                src="https://ik.imagekit.io/BakhshuTaekwondo/Gemini_Generated_Image_bvql1tbvql1tbvql.png"
+                className="w-full h-full object-cover grayscale brightness-75 hover:grayscale-0 transition-all duration-1000 rounded-none"
+                alt="Girls Training"
+              />
+              <div className="absolute -bottom-10 -right-10 w-64 h-64 bg-primary-red/10 blur-[120px] -z-10 rounded-none"></div>
             </div>
             <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-primary-red/10 blur-[100px] animate-pulse rounded-none"></div>
           </div>

@@ -1,0 +1,130 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bakhshu Taekwondo - Elite Combat & Fitness</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'primary-red': '#ff3c3c', // Vibrant red from the image
+              'primary-black': '#1F2429', // Deep black background
+              'card-dark': '#151515', // Slightly lighter card background
+              'text-gray': '#a3a3a3',
+            },
+            fontFamily: {
+              bebas: ['Bebas Neue', 'sans-serif'],
+              inter: ['ui-sans-serif', 'system-ui', 'sans-serif'],
+              serif: ['Playfair Display', 'serif'],
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      :root {
+        --background: 0 0% 4%;
+        --foreground: 0 0% 100%;
+      }
+
+      html.lenis, html.lenis body { height: auto; }
+      .lenis.lenis-smooth { scroll-behavior: auto !important; }
+      .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+      .lenis.lenis-stopped { overflow: hidden; }
+      .lenis.lenis-scrolling iframe { pointer-events: none; }
+
+      body {
+        background-color: hsl(var(--background));
+        font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji";
+        color: hsl(var(--foreground));
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        font-feature-settings: "cv11", "ss01";
+        font-variation-settings: "opsz" 32;
+        overflow-x: hidden;
+      }
+      
+      ::selection {
+        background-color: #ff3c3c;
+        color: #ffffff;
+      }
+
+      .nav-link {
+        position: relative;
+        text-transform: uppercase;
+        font-weight: 700;
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        color: #ffffff;
+        transition: color 0.3s ease;
+      }
+      
+      .nav-link:hover {
+        color: #ff3c3c;
+      }
+
+      .red-button {
+        background-color: #ff3c3c;
+        color: #ffffff;
+        transition: all 0.3s ease;
+      }
+      .red-button:hover {
+        background-color: #e62e2e;
+        transform: translateY(-2px);
+      }
+
+      .card-gradient {
+        background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .text-glow {
+        text-shadow: 0 0 20px rgba(255, 60, 60, 0.3);
+      }
+
+      /* Custom professional scrollbar for portal */
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: #111;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #333;
+        border-radius: 0;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #ff3c3c;
+      }
+    </style>
+
+<link rel="stylesheet" href="/index.css">
+<script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "@google/genai": "https://esm.sh/@google/genai@^1.34.0",
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+    "jspdf": "https://esm.sh/jspdf@^2.5.1",
+    "html2canvas": "https://esm.sh/html2canvas@^1.4.1"
+  }
+}
+</script>
+  <script type="module" crossorigin src="/assets/index-DkJTQz2R.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+</body>
+</html>

@@ -437,16 +437,16 @@ I have also downloaded my official PDF form. I am attaching it to this chat now 
               <div className="flex flex-wrap justify-between items-center text-[10px] font-black uppercase tracking-[0.4em] pt-8 opacity-60 border-t border-black/5">
                 <div className="flex items-center space-x-3 mb-4 md:mb-0">
                   <span>FEE STRUCTURE: Admission</span>
-                  <div className="text-sm font-serif italic text-black font-black border-b border-black min-w-[60px] text-center">1500/-</div>
+                  <div className="text-sm font-serif italic text-red font-white border-b border-white min-w-[60px] text-center">1500/-</div>
                 </div>
                 <div className="flex items-center space-x-3 mb-4 md:mb-0">
                   <span>Monthly</span>
-                  <div className="text-sm font-serif italic text-black font-black border-b border-black min-w-[60px] text-center">2500/-</div>
+                  <div className="text-sm font-serif italic text-red font-white border-b border-white min-w-[60px] text-center">2500/-</div>
                 </div>
-                <div className="flex items-center space-x-3">
+                {/* <div className="flex items-center space-x-3">
                   <span>Membership Card</span>
-                  <div className="text-sm font-serif italic text-black font-black border-b border-black min-w-[60px] text-center">1000/-</div>
-                </div>
+                  <div className="text-sm font-serif italic text-white font-black border-b border-black min-w-[60px] text-center">1000/-</div>
+                </div> */}
               </div>
 
               <div className="pt-12">

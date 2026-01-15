@@ -11,12 +11,30 @@ declare const gsap: any;
 
 const Hero: React.FC<HeroProps> = ({ onRegister }) => {
   const [activeSlide, setActiveSlide] = useState(0);
-  
+
   const containerRef = useRef<HTMLDivElement>(null);
   const slidesRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
   const isAnimating = useRef(false);
   const mousePos = useRef({ x: 0, y: 0 });
+
+  const getSectionId = (buttonText: string) => {
+    switch (buttonText) {
+      case 'Explore Programs': return 'programs';
+      case 'View Training Path': return 'about';
+      case 'Meet Our Coaches': return 'about';
+      case 'Learn More': return 'girls-training';
+      case 'Learn About the Program': return 'programs';
+      default: return 'programs';
+    }
+  };
+
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   const slideCount = HERO_SLIDES.length;
   const SLIDE_DURATION = 15000;
@@ -158,7 +176,7 @@ const Hero: React.FC<HeroProps> = ({ onRegister }) => {
 
 
   return (
-    <section ref={containerRef} className="relative h-[100dvh] overflow-hidden select-none font-inter">
+    <section id="hero" ref={containerRef} className="relative h-[100dvh] overflow-hidden select-none font-inter">
       <div ref={slidesRef} className="absolute inset-0 w-full h-full">
         {HERO_SLIDES.map((slide, idx) => (
           <div 
@@ -203,15 +221,15 @@ const Hero: React.FC<HeroProps> = ({ onRegister }) => {
                   {slide.primaryBtn}
                 </button>
                 
-                <a 
-                  href="#programs"
+                <button
+                  onClick={() => scrollToSection(getSectionId(slide.secondaryBtn))}
                   className="relative group px-10 md:px-12 py-4 md:py-5 text-[10px] font-black border border-white/20 text-white bg-white/5 backdrop-blur-md hover:bg-white hover:text-black transition-all duration-500 rounded-none uppercase tracking-[0.2em] overflow-hidden active:scale-95 text-center"
                 >
                   <div className="absolute inset-0 bg-primary-red/10 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500"></div>
                   <div className="relative">
                     <span>{slide.secondaryBtn}</span>
                   </div>
-                </a>
+                </button>
               </div>
             </div>
           </div>

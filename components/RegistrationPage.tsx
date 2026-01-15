@@ -259,7 +259,7 @@ I have also downloaded my official PDF form. I am attaching it to this chat now 
           <span>Back to Home</span>
         </button>
         <div className="flex items-center space-x-2">
-          <img src="https://ik.imagekit.io/BakhshuTaekwondo/bakhshu?updatedAt=1767881121835" alt="Logo" className="w-8 h-8" />
+          <img src="https://ik.imagekit.io/BakhshuTaekwondo/logo.jpeg?updatedAt=1768482725879" alt="Logo" className="w-8 h-8 bg-white rounded-full" />
           <span className="font-bebas text-lg tracking-widest uppercase text-white">Admission Portal</span>
         </div>
         <div className="w-24"></div>
@@ -271,9 +271,9 @@ I have also downloaded my official PDF form. I am attaching it to this chat now 
             <div className="flex flex-col md:flex-row justify-between items-start border-b-2 border-black pb-12 mb-16 relative">
               <div className="flex items-center space-x-6 mb-8 md:mb-0">
                 <img
-                  src="https://ik.imagekit.io/BakhshuTaekwondo/bakhshu?updatedAt=1767881121835"
+                  src="https://ik.imagekit.io/BakhshuTaekwondo/logo.jpeg?updatedAt=1768482725879"
                   alt="Official Logo"
-                  className="w-24 h-24 object-contain"
+                  className="w-24 h-24 bg-white rounded-full object-contain"
                 />
                 <div className="text-left">
                   <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-[0.85] mb-2 uppercase">BAKHSHU TAEKWONDO</h1>
@@ -356,7 +356,7 @@ I have also downloaded my official PDF form. I am attaching it to this chat now 
                         <select
                           name={field.name}
                           onChange={handleChange}
-                          className="w-full border-b border-black/20 py-3 focus:border-black outline-none transition-colors bg-transparent text-base font-bold appearance-none rounded-none"
+                          className="w-full border-b border-black/20 py-3 focus:border-black outline-none transition-colors bg-black text-base font-bold appearance-none rounded-none"
                         >
                           <option value="">Select Option</option>
                           {field.options?.map(opt => <option key={opt} value={opt}>{opt}</option>)}
@@ -377,7 +377,7 @@ I have also downloaded my official PDF form. I am attaching it to this chat now 
 
                 <div className="flex flex-col space-y-2">
                   <label className="text-[10px] font-black uppercase tracking-[0.2em] text-white/80">Preferred Branch</label>
-                  <select name="branch" value={formData.branch} onChange={handleChange} className="w-full border-b border-black/20 py-3 focus:border-black outline-none bg-transparent text-base font-bold rounded-none">
+                  <select name="branch" value={formData.branch} onChange={handleChange} className="w-full border-b border-black/20 py-3 focus:border-black outline-none bg-black text-base font-bold rounded-none">
                     <option value="soan">Soan Garden (Islamabad)</option>
                     <option value="pindi">Haidri Chowk (Rawalpindi)</option>
                   </select>
@@ -468,7 +468,7 @@ I have also downloaded my official PDF form. I am attaching it to this chat now 
             </div>
             <h2 className="text-6xl font-bebas mb-6 leading-none text-white">Registration Successful</h2>
             <p className="text-slate-500 mb-12 text-xl font-serif italic leading-relaxed">
-              Assalam o Alaikum <span className="text-white font-bold">{formData.fullName}</span>! Your admission request for the <span className="text-black font-bold uppercase tracking-widest">{BRANCHES[formData.branch].name}</span> has been digitally filed.
+              Assalam o Alaikum <span className="text-white font-bold">{formData.fullName}</span>! Your admission request for the <span className="text-white font-bold uppercase tracking-widest">{BRANCHES[formData.branch].name}</span> has been digitally filed.
             </p>
 
             <div className="flex flex-col gap-4">

@@ -49,7 +49,7 @@ const GirlsTraining: React.FC = () => {
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-32 bg-primary-black border-t border-white/5 relative overflow-hidden">
+    <section id="girls-training" ref={sectionRef} className="py-32 bg-primary-black border-t border-white/5 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-6">
 
         {/* Section Headline Header */}

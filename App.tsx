@@ -11,6 +11,8 @@ import Programs from './components/Programs';
 import Branches from './components/Branches';
 import SpecialAlert from './components/SpecialAlert';
 import Gallery from './components/Gallery';
+import { Achievements } from './components/Achievements';
+import { Events } from './components/Events';
 import LocationMap from './components/LocationMap';
 import Footer from './components/Footer';
 import RegistrationPage from './components/RegistrationPage';
@@ -93,7 +95,9 @@ const App: React.FC = () => {
         <Hero onRegister={() => handleEnrollClick('soan')} />
         <WhyChooseUs />
         <About />
+        <Achievements onRegister={() => handleEnrollClick('soan')} />
         <Benefits />
+        <Events onRegister={() => handleEnrollClick('soan')} />
         <WhyParentsSection />
         <GirlsTraining />
         <Programs />
@@ -103,13 +107,28 @@ const App: React.FC = () => {
         <LocationMap />
       </main>
 
-      <Footer onRegister={() => handleEnrollClick('soan')} />
+      <Footer />
 
       <ConfirmIntentModal 
         isOpen={isConfirmModalOpen} 
         onClose={() => setIsConfirmModalOpen(false)}
         onConfirm={confirmEnrollment}
       />
+
+
+      {/* Floating WhatsApp Button */}
+      <a
+        href="https://wa.me/923350990834?text=Assalam-o-Alaikum.%20I%20hope%20you%20are%20doing%20well.%20I%20am%20interested%20in%20joining%20Bakhshu%20Taekwondo%20and%20would%20like%20to%20get%20more%20details%20regarding%20training%20schedules,%20fees,%20and%20the%20registration%20process.%20Thank%20you."
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-6 right-6 z-[60] w-14 h-14 text-white flex items-center justify-center hover:scale-110 active:scale-95 transition-all group"
+      >
+        <img className="group-hover:rotate-12 transition-transform" src="./components/image/whatsapp.png" alt="whatsapp image" />
+        {/* <MessageCircle size={30} fill="white" className="group-hover:rotate-12 transition-transform" /> */}
+        <span className="absolute right-full mr-4 px-4 py-2 text-white text-[10px] font-black uppercase tracking-widest whitespace-nowrap group-hover:opacity-100 transition-opacity pointer-events-none">
+          Contact Coach Basharat
+        </span>
+      </a>
     </div>
   );
 };

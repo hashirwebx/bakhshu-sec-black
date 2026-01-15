@@ -158,7 +158,7 @@ const Hero: React.FC<HeroProps> = ({ onRegister }) => {
 
 
   return (
-    <section ref={containerRef} className="relative h-[100dvh] bg-black overflow-hidden select-none font-inter">
+    <section ref={containerRef} className="relative h-[100dvh] overflow-hidden select-none font-inter">
       <div ref={slidesRef} className="absolute inset-0 w-full h-full">
         {HERO_SLIDES.map((slide, idx) => (
           <div 
@@ -169,10 +169,10 @@ const Hero: React.FC<HeroProps> = ({ onRegister }) => {
               <img 
                 src={slide.image} 
                 alt="Elite Combat Training" 
-                className="slide-bg w-full h-full object-cover grayscale brightness-[0.25] transition-all duration-1000 scale-105"
+                className="slide-bg w-full h-full object-cover transition-all duration-1000 scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/30 to-black/95"></div>
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0)_0%,rgba(0,0,0,0.5)_100%)]"></div>
+              {/* <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/30 to-black/95"></div>
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0)_0%,rgba(0,0,0,0.5)_100%)]"></div> */}
             </div>
 
             <div className="relative z-20 w-full max-w-4xl mx-auto flex flex-col items-center pb-20 md:pb-24">

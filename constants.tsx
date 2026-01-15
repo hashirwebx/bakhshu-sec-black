@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Shield, Users, Target, Brain, Dumbbell, Award, Heart, Smartphone, Zap, Apple, ShieldCheck, UserCheck, Star } from 'lucide-react';
+import { Shield, Users, Target, Brain, Dumbbell, Award, Heart, Smartphone, Zap, Apple, ShieldCheck, UserCheck, Star, GraduationCap, Globe, Trophy, Mountain, Calendar, Users2, Medal, HeartHandshake } from 'lucide-react';
 import { BranchInfo } from './types';
 
 export const BRANCHES: Record<string, BranchInfo> = {
@@ -59,6 +59,49 @@ export const KIDS_BENEFITS = [
     icon: <Users className="w-6 h-6" />
   }
 ];
+
+export const ACHIEVEMENTS = [
+  {
+    title: "Black Belt Excellence",
+    desc: "Hundreds of our dedicated students have successfully achieved their Black Belts, reflecting years of discipline and mastery.",
+    icon: <Shield className="w-8 h-8" />,
+    image: "https://ik.imagekit.io/BakhshuTaekwondo/Achievements%20bakhshu/Gemini_Generated_Image_glbonyglbonyglbo.png"
+  },
+  {
+    title: "University Scholarships",
+    desc: "Our champions are recipients of sports-based scholarships in top-tier universities across Pakistan.",
+    icon: <GraduationCap className="w-8 h-8" />,
+    image: "https://ik.imagekit.io/BakhshuTaekwondo/Achievements%20bakhshu/Gemini_Generated_Image_exaqrnexaqrnexaq.png"
+  },
+  {
+    title: "Global Participation",
+    desc: "Regular representation and participation in prestigious national and international Taekwondo events.",
+    icon: <Globe className="w-8 h-8" />,
+    image: "https://ik.imagekit.io/BakhshuTaekwondo/Achievements%20bakhshu/Gemini_Generated_Image_qecxwiqecxwiqecx.png"
+  },
+  {
+    title: "Medalists & Champions",
+    desc: "Proudly producing consistent medalists and champions in elite competitive circuits.",
+    icon: <Trophy className="w-8 h-8" />,
+    image: "https://ik.imagekit.io/BakhshuTaekwondo/Achievements%20bakhshu/Gemini_Generated_Image_cyyxe1cyyxe1cyyx.png"
+  }
+];
+
+
+export const EVENTS = [
+  { title: "Club Championships", icon: <Trophy className="w-5 h-5" />, category: "Competition" },
+  { title: "National Events", icon: <Globe className="w-5 h-5" />, category: "Federation" },
+  { title: "Club Fun Trips", icon: <Heart className="w-5 h-5" />, category: "Social" },
+  { title: "Summer Hiking", icon: <Mountain className="w-5 h-5" />, category: "Outdoor" },
+  { title: "Council Elections", icon: <Users2 className="w-5 h-5" />, category: "Leadership" },
+  { title: "Belt Ceremonies", icon: <Medal className="w-5 h-5" />, category: "Promotion" },
+  { title: "Inter-Club Cups", icon: <Target className="w-5 h-5" />, category: "Tournament" },
+  { title: "Demo Days", icon: <Zap className="w-5 h-5" />, category: "Exhibition" },
+  { title: "Defense Workshops", icon: <ShieldCheck className="w-5 h-5" />, category: "Special" },
+  { title: "Anti-Bullying", icon: <HeartHandshake className="w-5 h-5" />, category: "Outreach" },
+  { title: "Family Fiesta", icon: <Users className="w-5 h-5" />, category: "BTC Family" }
+];
+
 
 export const PARENT_CHOICES = [
   "Safe, child-friendly training environment",

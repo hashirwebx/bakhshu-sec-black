@@ -21,31 +21,31 @@ const Navbar: React.FC<NavbarProps> = ({ onRegister }) => {
   }, []);
 
 
-useEffect(() => {
-  if (isOpen) {
-    const currentScrollY = window.scrollY;
-    setScrollY(currentScrollY);
+  useEffect(() => {
+    if (isOpen) {
+      const currentScrollY = window.scrollY;
+      setScrollY(currentScrollY);
 
-    document.body.style.position = 'fixed';
-    document.body.style.top = `-${currentScrollY}px`;
-    document.body.style.left = '0';
-    document.body.style.right = '0';
-    document.body.style.width = '100%';
-  } else {
-    document.body.style.position = '';
-    document.body.style.top = '';
-    document.body.style.left = '';
-    document.body.style.right = '';
-    document.body.style.width = '';
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${currentScrollY}px`;
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+      document.body.style.width = '100%';
+    } else {
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.width = '';
 
-    window.scrollTo(0, scrollY);
-  }
+      window.scrollTo(0, scrollY);
+    }
 
-  return () => {
-    document.body.style.position = '';
-    document.body.style.top = '';
-  };
-}, [isOpen]);
+    return () => {
+      document.body.style.position = '';
+      document.body.style.top = '';
+    };
+  }, [isOpen]);
 
 
   const scrollToSection = (sectionId: string) => {
@@ -72,8 +72,8 @@ useEffect(() => {
             <img src="https://scontent.fisb5-1.fna.fbcdn.net/v/t39.30808-1/354185334_801753254852682_2772486742754562942_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=103&ccb=1-7&_nc_sid=2d3e12&_nc_ohc=TuJqvwVxzHcQ7kNvwEtXAZ4&_nc_oc=AdlQEDLDKUCqHqkx9a3l0hR654UyTTg1-50Gkelb0D89k5ZUi1pBDoRDxqkHbfJSQFg&_nc_zt=24&_nc_ht=scontent.fisb5-1.fna&_nc_gid=7o_MZhsQ7762zC1jZEk3cA&oh=00_AfoM7dI6kxAKdRyu_lwi2Kb3zg4XWquisYcD5XFNuuD2dQ&oe=696C4EE3" alt="Logo" className="w-14 h-14" />
 
             <div>
-              <span className="font-bebas text-2xl tracking-widest text-white block leading-none">BAKHSHU</span>
-              <span className="text-[10px] font-bold tracking-[0.2em] text-primary-red uppercase">FITNESS CLUB</span>
+              <span className="font-bebas text-2xl tracking-widest text-white block leading-none">Bakhshu Taekwondo</span>
+              <span className="text-[10px] font-bold tracking-[0.2em] text-primary-red uppercase">& Fitness Club</span>
             </div>
           </div>
 

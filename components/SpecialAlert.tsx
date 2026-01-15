@@ -25,8 +25,18 @@ const SpecialAlert: React.FC<SpecialAlertProps> = ({ onBook }) => {
   }, []);
 
   return (
-    <section ref={containerRef} className="py-24 bg-primary-black overflow-hidden border-t border-white/5">
-      <div className="max-w-6xl mx-auto px-6">
+    <section ref={containerRef} className="py-24 bg-primary-black overflow-hidden border-t border-white/5 relative">
+      {/* Cinematic Action Background */}
+      <div className="absolute inset-0 z-0">
+        <img 
+          src="https://images.unsplash.com/photo-1555597673-b21d5c935865?auto=format&fit=crop&q=80&w=1920" 
+          alt="Martial Arts Action" 
+          className="w-full h-full object-cover opacity-[0.07] grayscale"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-primary-black via-transparent to-primary-black"></div>
+      </div>
+
+      <div className="max-w-6xl mx-auto px-6 relative z-10">
         <div className="alert-box bg-white/[0.02] backdrop-blur-3xl p-12 md:p-24 relative overflow-hidden flex flex-col items-center text-center gap-12 rounded-none border border-white/10 group shadow-[0_30px_100px_rgba(0,0,0,0.5)]">
           <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary-red/5 blur-[120px] rounded-none -mr-64 -mt-64 transition-transform duration-1000 group-hover:scale-110"></div>
           <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-primary-red/5 blur-[100px] rounded-none -ml-32 -mb-32"></div>
@@ -48,7 +58,7 @@ const SpecialAlert: React.FC<SpecialAlertProps> = ({ onBook }) => {
             <div className="flex flex-col sm:flex-row gap-6 justify-center pt-8">
               <button 
                 onClick={onBook}
-                className="red-button px-12 py-6 rounded-none font-black text-sm uppercase tracking-widest flex items-center justify-center space-x-4 shadow-[0_20px_60px_rgba(255,60,60,0.25)] active:scale-95 transition-all"
+                className="red-button px-16 py-8 rounded-none font-black text-sm uppercase tracking-widest flex items-center justify-center space-x-4 shadow-[0_20px_60px_rgba(255,60,60,0.25)] active:scale-95 transition-all"
               >
                 <Zap size={20} className="fill-current" />
                 <span>Book Free Trial Class</span>
@@ -56,7 +66,7 @@ const SpecialAlert: React.FC<SpecialAlertProps> = ({ onBook }) => {
               
               <a 
                 href="#branches"
-                className="px-12 py-8 rounded-none border border-white/10 bg-white/5 backdrop-blur-md text-white font-black text-sm uppercase tracking-widest flex items-center justify-center space-x-4 hover:bg-white/10 active:scale-95 transition-all"
+                className="px-16 py-8 rounded-none border border-white/10 bg-white/5 backdrop-blur-md text-white font-black text-sm uppercase tracking-widest flex items-center justify-center space-x-4 hover:bg-white/10 active:scale-95 transition-all"
               >
                 <MapPin size={20} />
                 <span>Visit Our Academy</span>

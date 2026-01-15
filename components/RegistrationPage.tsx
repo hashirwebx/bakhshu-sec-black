@@ -113,7 +113,7 @@ const RegistrationPage: React.FC<RegistrationPageProps> = ({ onBack, defaultBran
   };
 
   const getWhatsAppLink = () => {
-    const baseUrl = "https://wa.me/923455304798";
+    const baseUrl = "https://wa.me/923350990834";
     const text = encodeURIComponent(
       `Assalam o Alaikum Coach! 
 I have digitally submitted the Admission Form. 
@@ -135,7 +135,6 @@ I have also downloaded my official PDF form. I am attaching it to this chat now 
 
   return (
     <div className="h-screen bg-[#1C1F23] flex flex-col items-center overflow-hidden">
-      {/* RESTORED "OLD" PHYSICAL FORM PDF TEMPLATE */}
       <div className="fixed left-[-9999px] top-0">
         <div
           ref={pdfTemplateRef}
@@ -219,7 +218,6 @@ I have also downloaded my official PDF form. I am attaching it to this chat now 
               </ul>
             </div>
 
-            {/* Signature Area */}
             <div className="flex justify-between items-end mt-16 mb-8">
               <div className="w-56 text-center">
                 <div className="border-t border-black pt-2 text-[10px] font-black uppercase tracking-widest">Parent's Signature</div>
